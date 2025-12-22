@@ -1,4 +1,4 @@
 package com.bill.chess.domain.enums;
 
-public enum Color {
+public enum PieceType {
 }
