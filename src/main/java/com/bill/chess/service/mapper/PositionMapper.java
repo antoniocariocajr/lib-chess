@@ -25,6 +25,7 @@ public final class PositionMapper {
     }
 
     public static String toNotation(Position position) {
+        validatePosition(position);
         char fileChar = (char) ('a' + position.file());
         return "" + fileChar + position.rank();
     }
