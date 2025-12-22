@@ -1,11 +1,11 @@
-package com.bill.chess.service.mapper;
+package com.bill.chess.service.factory;
 
 import com.bill.chess.service.validation.PieceValidation;
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Piece;
 
-public final class PieceMapper {
+public final class PieceFactory {
 
     public static Piece toPiece(char unicode) {
 

@@ -1,17 +1,33 @@
-package com.bill.chess.service.mapper;
+package com.bill.chess.service.factory;
 
 import com.bill.chess.domain.model.Position;
 
 import static com.bill.chess.service.validation.PositionValidation.validateNotation;
 import static com.bill.chess.service.validation.PositionValidation.validatePosition;
 
-public final class PositionMapper {
+public final class PositionFactory {
 
     public static Position fromNotation(String notation) {
         validateNotation(notation);
 
         char fileChar = notation.charAt(0);
         char rankChar = notation.charAt(1);
+
+        int file = fileChar - 'a';
+        int rank = Character.getNumericValue(rankChar);
+
+        return of(rank, file);
+    }
+
+    public static Position fromFen(String fen) {
+
+        if (fen.equals("-"))
+            return null;
+
+        validateNotation(fen);
+
+        char fileChar = fen.charAt(0);
+        char rankChar = fen.charAt(1);
 
         int file = fileChar - 'a';
         int rank = Character.getNumericValue(rankChar);

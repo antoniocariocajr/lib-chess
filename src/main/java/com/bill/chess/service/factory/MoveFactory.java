@@ -1,4 +1,4 @@
-package com.bill.chess.service.mapper;
+package com.bill.chess.service.factory;
 
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Move;
@@ -6,7 +6,7 @@ import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 import com.bill.chess.service.validation.MoveValidation;
 
-public final class MoveMapper {
+public final class MoveFactory {
 
     public static Move quiet(Position from, Position to, Piece pieceMoved) {
         MoveValidation.validateMove(from, to);
@@ -35,10 +35,10 @@ public final class MoveMapper {
 
     public static Move fromUci(String uci) {
         MoveValidation.validateUci(uci);
-        Position from = PositionMapper.fromNotation(uci.substring(0, 2));
-        Position to = PositionMapper.fromNotation(uci.substring(2, 4));
+        Position from = PositionFactory.fromNotation(uci.substring(0, 2));
+        Position to = PositionFactory.fromNotation(uci.substring(2, 4));
         if (uci.length() == 5) {
-            Piece promoted = PieceMapper.toPiece(uci.substring(4));
+            Piece promoted = PieceFactory.toPiece(uci.substring(4));
             Piece moved = new Piece(PieceType.PAWN, promoted.color());
             return promotion(from, to, promoted, moved);
         }
@@ -47,14 +47,20 @@ public final class MoveMapper {
 
     public static Move fromUci(String uci, Piece pieceMoved) {
         MoveValidation.validateUci(uci);
-        Position from = PositionMapper.fromNotation(uci.substring(0, 2));
-        Position to = PositionMapper.fromNotation(uci.substring(2, 4));
+        Position from = PositionFactory.fromNotation(uci.substring(0, 2));
+        Position to = PositionFactory.fromNotation(uci.substring(2, 4));
         if (uci.length() == 5) {
-            Piece promoted = PieceMapper.toPiece(uci.substring(4));
+            Piece promoted = PieceFactory.toPiece(uci.substring(4));
             Piece moved = new Piece(PieceType.PAWN, pieceMoved.color());
             return promotion(from, to, promoted, moved);
         }
         return quiet(from, to, pieceMoved);
     }
 
+    public static String toUci(Move move) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(PositionFactory.toNotation(move.from())).append(PositionFactory.toNotation(move.to()));
+        move.promotion().ifPresent(p -> sb.append(PieceFactory.toUnicode(p)));
+        return sb.toString();
+    }
 }

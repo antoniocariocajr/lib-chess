@@ -1,9 +1,9 @@
-package com.bill.chess.service.mapper;
+package com.bill.chess.service.factory;
 
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.infra.exception.InvalidColorException;
 
-public final class ColorMapper {
+public final class ColorFactory {
 
     public static Color toColor(char symbol) {
         return switch (Character.toLowerCase(symbol)) {
