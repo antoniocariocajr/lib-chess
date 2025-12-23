@@ -1,4 +1,4 @@
-package com.bill.chess.service.factory;
+package com.bill.chess.domain.factory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.service.validation.BoardValidation;
+import com.bill.chess.infra.validation.BoardValidation;
 
 public class BoardFactory {
 

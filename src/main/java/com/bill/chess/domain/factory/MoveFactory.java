@@ -1,10 +1,10 @@
-package com.bill.chess.service.factory;
+package com.bill.chess.domain.factory;
 
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.service.validation.MoveValidation;
+import com.bill.chess.infra.validation.MoveValidation;
 
 public final class MoveFactory {
 

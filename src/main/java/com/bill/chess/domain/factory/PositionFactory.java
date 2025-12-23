@@ -1,9 +1,9 @@
-package com.bill.chess.service.factory;
+package com.bill.chess.domain.factory;
+
+import static com.bill.chess.infra.validation.PositionValidation.validateNotation;
+import static com.bill.chess.infra.validation.PositionValidation.validatePosition;
 
 import com.bill.chess.domain.model.Position;
-
-import static com.bill.chess.service.validation.PositionValidation.validateNotation;
-import static com.bill.chess.service.validation.PositionValidation.validatePosition;
 
 public final class PositionFactory {
 

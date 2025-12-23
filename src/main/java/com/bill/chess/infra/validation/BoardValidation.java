@@ -1,4 +1,4 @@
-package com.bill.chess.service.validation;
+package com.bill.chess.infra.validation;
 
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.infra.exception.InvalidBoardException;

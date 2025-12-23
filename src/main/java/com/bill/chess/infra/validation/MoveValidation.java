@@ -1,4 +1,4 @@
-package com.bill.chess.service.validation;
+package com.bill.chess.infra.validation;
 
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;

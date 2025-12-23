@@ -3,7 +3,7 @@ package com.bill.chess.domain.model;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.bill.chess.service.factory.PositionFactory;
+import com.bill.chess.domain.factory.PositionFactory;
 
 import jakarta.validation.constraints.NotNull;
 

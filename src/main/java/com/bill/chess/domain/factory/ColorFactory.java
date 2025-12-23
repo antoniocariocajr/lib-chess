@@ -1,4 +1,4 @@
-package com.bill.chess.service.factory;
+package com.bill.chess.domain.factory;
 
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.infra.exception.InvalidColorException;

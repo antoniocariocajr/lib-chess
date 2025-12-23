@@ -1,9 +1,9 @@
-package com.bill.chess.service.factory;
+package com.bill.chess.domain.factory;
 
-import com.bill.chess.service.validation.PieceValidation;
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Piece;
+import com.bill.chess.infra.validation.PieceValidation;
 
 public final class PieceFactory {
 

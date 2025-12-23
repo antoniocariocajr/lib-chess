@@ -13,4 +13,8 @@ public enum Color {
     public char symbol() {
         return symbol;
     }
+
+    public Color opposite() {
+        return this == WHITE ? BLACK : WHITE;
+    }
 }

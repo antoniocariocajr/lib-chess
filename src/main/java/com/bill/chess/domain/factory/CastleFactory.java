@@ -1,4 +1,4 @@
-package com.bill.chess.service.factory;
+package com.bill.chess.domain.factory;
 
 import java.util.HashSet;
 import java.util.Set;
