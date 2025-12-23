@@ -2,9 +2,9 @@ package com.bill.chess.domain.rule;
 
 import com.bill.chess.domain.model.Position;
 
-public final class validPositionRule {
+public final class ValidPositionRule {
 
-    private validPositionRule() {
+    private ValidPositionRule() {
     }
 
     public static boolean isValid(Position position) {
