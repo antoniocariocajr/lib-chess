@@ -23,6 +23,13 @@ public final class MoveFactory {
         return new Move(from, to, null, promoted, pieceMoved, false, false);
     }
 
+    public static Move promotionAndCapture(Position from, Position to, Piece capturedPiece, Piece promoted,
+            Piece pieceMoved) {
+        MoveValidation.validatePromotion(from, to, promoted, pieceMoved);
+        MoveValidation.validateCapture(from, to, capturedPiece, pieceMoved);
+        return new Move(from, to, capturedPiece, promoted, pieceMoved, false, false);
+    }
+
     public static Move enPassant(Position from, Position to, Piece pieceMoved) {
         MoveValidation.validateEnPassant(from, to, pieceMoved);
         return new Move(from, to, null, null, pieceMoved, false, true);

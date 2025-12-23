@@ -17,4 +17,8 @@ public enum Color {
     public Color opposite() {
         return this == WHITE ? BLACK : WHITE;
     }
+
+    public boolean isWhite() {
+        return this == WHITE;
+    }
 }
