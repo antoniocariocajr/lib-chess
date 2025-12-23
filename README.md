@@ -4,7 +4,7 @@
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://www.java.com)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
+[![Build Status](https://github.com/antoniocariocajr/lib-chess/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/antoniocariocajr/lib-chess/actions)
 
 **Lib Chess** é um pacote Java projetado para lidar com toda a complexidade das regras do xadrez. Construído com princípios de **Domain-Driven Design (DDD)** e **Imutabilidade**, ele oferece uma base sólida para criar jogos de xadrez, motores de análise ou aplicações educacionais.
 
@@ -27,9 +27,9 @@ Adicione a dependência ao seu `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>com.bill</groupId>
-    <artifactId>chess</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>com.github.antoniocariocajr</groupId>
+    <artifactId>lib-chess</artifactId>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -95,7 +95,7 @@ ChessMatch scenario = ChessFactory.fromFen("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1P
 
 O projeto segue uma arquitetura baseada em domínio:
 
-```
+```text
 com.bill.chess
 ├── domain
 │   ├── model       # Entidades principais (Board, Piece, ChessMatch)
