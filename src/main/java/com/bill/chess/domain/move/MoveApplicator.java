@@ -16,16 +16,15 @@ import static com.bill.chess.domain.rule.StatusMatchCalculator.calculatorStatus;
 
 public final class MoveApplicator {
 
-    public static  ChessMatch apply(ChessMatch chessMatch, Move move) {
-        //performs the move
-        Board board = chessMatch.board();
-        board.doMove(move);
-        //update match
+    public static ChessMatch apply(ChessMatch chessMatch, Move move) {
+        // performs the move
+        Board board = BoardTransformer.apply(chessMatch.board(), move);
+        // update match
         Color colorNewTurn = chessMatch.currentColor().opposite();
-        Set<CastleRight> rights =updateCastle(chessMatch.castleRights(), move);
+        Set<CastleRight> rights = updateCastle(chessMatch.castleRights(), move);
         Position enPassant = updateEnPassant(move);
         Integer halfMoveClock = updateHalfMove(chessMatch.halfMoveClock(), move);
-        MatchStatus status = calculatorStatus(board,colorNewTurn,rights,enPassant,halfMoveClock);
+        MatchStatus status = calculatorStatus(board, colorNewTurn, rights, enPassant, halfMoveClock);
         return new ChessMatch(
                 board,
                 status,
@@ -34,7 +33,7 @@ public final class MoveApplicator {
                 enPassant,
                 halfMoveClock,
                 updateFullMove(chessMatch.fullMoveNumber(), colorNewTurn),
-                isInCheck(board,colorNewTurn));
+                isInCheck(board, colorNewTurn));
     }
 
 }

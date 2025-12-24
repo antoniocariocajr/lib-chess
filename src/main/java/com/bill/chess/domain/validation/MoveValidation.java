@@ -17,15 +17,20 @@ public final class MoveValidation {
             throw new InvalidMoveException("Move cannot be from and to the same position");
     }
 
-    public static void validateEnPassant(Position from, Position to, Piece pieceMoved) {
+    public static void validateEnPassant(Position from, Position to, Piece capturedPiece, Piece pieceMoved) {
         validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
+        PieceValidation.validatePiece(capturedPiece);
         if (!pieceMoved.isPawn())
             throw new InvalidMoveException("En passant can only be made by a pawn");
         if (from.file() != to.file())
             throw new InvalidMoveException("En passant can only be made by a pawn on the same file");
         if (from.rank() != to.rank() + 2)
             throw new InvalidMoveException("En passant can only be made by a pawn on the same rank");
+        if (!capturedPiece.isPawn())
+            throw new InvalidMoveException("En passant can only be made by a pawn");
+        if (capturedPiece.color() == pieceMoved.color())
+            throw new InvalidMoveException("En passant can only be made by a pawn of the opposite color");
     }
 
     public static void validateCastling(Position from, Position to, Piece pieceMoved) {

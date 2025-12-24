@@ -30,9 +30,9 @@ public final class MoveFactory {
         return new Move(from, to, capturedPiece, promoted, pieceMoved, false, false);
     }
 
-    public static Move enPassant(Position from, Position to, Piece pieceMoved) {
-        MoveValidation.validateEnPassant(from, to, pieceMoved);
-        return new Move(from, to, null, null, pieceMoved, false, true);
+    public static Move enPassant(Position from, Position to, Piece capturedPiece, Piece pieceMoved) {
+        MoveValidation.validateEnPassant(from, to, capturedPiece, pieceMoved);
+        return new Move(from, to, capturedPiece, null, pieceMoved, false, true);
     }
 
     public static Move castle(Position from, Position to, Piece pieceMoved) {

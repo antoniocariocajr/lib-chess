@@ -8,7 +8,6 @@ import java.util.Set;
 import com.bill.chess.domain.enums.CastleRight;
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.PieceType;
-import com.bill.chess.domain.factory.BoardFactory;
 import com.bill.chess.domain.factory.PositionFactory;
 import com.bill.chess.domain.generator.CastlingGenerator;
 import com.bill.chess.domain.generator.MoveGenerator;
@@ -18,6 +17,7 @@ import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Position;
+import com.bill.chess.domain.move.BoardTransformer;
 import com.bill.chess.domain.generator.SlidingMoveGenerator;
 
 import static com.bill.chess.domain.rule.InCheckCalculator.isInCheck;
@@ -54,16 +54,16 @@ public final class LegalMoveFilter {
         // Filter out checks
         List<Move> legal = new ArrayList<>(pseudo.size());
         for (Move move : pseudo) {
-            Board copy = BoardFactory.copy(match.board());
-            copy.doMove(move);
+            Board copy = BoardTransformer.apply(match.board(), move);
             if (!isInCheck(copy, match.currentColor()))
                 legal.add(move);
         }
         return legal;
     }
+
     public static List<Move> forColor(Board board, Color color,
-                                      Set<CastleRight> rights,
-                                      Position enPassant) {
+            Set<CastleRight> rights,
+            Position enPassant) {
         List<Move> pseudo = new ArrayList<>(100);
 
         // gera todos os pseudo-moves
@@ -73,7 +73,8 @@ public final class LegalMoveFilter {
                 board.pieceAt(pos).ifPresent(piece -> {
                     if (piece.color() == color) {
                         MoveGenerator gen = generators.get(piece.type());
-                        if (gen != null) pseudo.addAll(gen.generate(board, pos, piece, enPassant));
+                        if (gen != null)
+                            pseudo.addAll(gen.generate(board, pos, piece, enPassant));
                     }
                 });
             }
@@ -82,8 +83,7 @@ public final class LegalMoveFilter {
         // filtra xeque
         List<Move> legal = new ArrayList<>(pseudo.size());
         for (Move m : pseudo) {
-            Board copy = BoardFactory.copy(board);
-            copy.doMove(m);
+            Board copy = BoardTransformer.apply(board, m);
             if (!isInCheck(copy, color))
                 legal.add(m);
         }
