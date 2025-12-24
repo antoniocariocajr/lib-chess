@@ -1,7 +1,9 @@
-package com.bill.chess.infra.validation;
+package com.bill.chess.domain.validation;
 
 import com.bill.chess.domain.model.Piece;
-import com.bill.chess.infra.exception.InvalidBoardException;
+import com.bill.chess.domain.exception.InvalidBoardException;
+
+import java.util.Arrays;
 
 public class BoardValidation {
 
@@ -27,16 +29,16 @@ public class BoardValidation {
 
     public static void validateSquares(Piece[][] squares) {
         if (squares.length != 9) {
-            throw new InvalidBoardException("Invalid squares: " + squares);
+            throw new InvalidBoardException("Invalid squares: " + Arrays.deepToString(squares));
         }
         for (Piece square : squares[0]) {
             if (square != null) {
-                throw new InvalidBoardException("Invalid squares: " + squares);
+                throw new InvalidBoardException("Invalid squares: " + Arrays.deepToString(squares));
             }
         }
         for (Piece[] rank : squares) {
             if (rank.length != 8) {
-                throw new InvalidBoardException("Invalid squares: " + squares);
+                throw new InvalidBoardException("Invalid squares: " + Arrays.deepToString(squares));
             }
         }
     }

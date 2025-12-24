@@ -1,4 +1,4 @@
-package com.bill.chess.infra.exception;
+package com.bill.chess.domain.exception;
 
 public class InvalidPieceException extends RuntimeException {
 

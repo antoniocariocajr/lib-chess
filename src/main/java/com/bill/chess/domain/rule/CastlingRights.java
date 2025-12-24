@@ -10,8 +10,9 @@ import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 
 public final class CastlingRights {
+    private CastlingRights(){}
 
-    public static Set<CastleRight> update(Set<CastleRight> rights, Move move) {
+    public static Set<CastleRight> updateCastle(Set<CastleRight> rights, Move move) {
         Set<CastleRight> newRights = EnumSet.copyOf(rights);
         Piece moved = move.pieceMoved();
         if (moved.isKing()) {
@@ -43,10 +44,5 @@ public final class CastlingRights {
         return position.file() == 7 ? (color.isWhite() ? CastleRight.WHITE_KINGSIDE : CastleRight.BLACK_KINGSIDE)
                 : position.file() == 0 ? (color.isWhite() ? CastleRight.WHITE_QUEENSIDE : CastleRight.BLACK_QUEENSIDE)
                         : null;
-    }
-
-    public static Set<CastleRight> initial() {
-        return Set.of(CastleRight.WHITE_KINGSIDE, CastleRight.WHITE_QUEENSIDE,
-                CastleRight.BLACK_KINGSIDE, CastleRight.BLACK_QUEENSIDE);
     }
 }

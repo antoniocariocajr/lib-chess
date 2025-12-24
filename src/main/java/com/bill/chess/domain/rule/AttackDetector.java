@@ -7,17 +7,19 @@ import com.bill.chess.domain.factory.PositionFactory;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
+import com.bill.chess.domain.validation.ValidPositionRule;
 
 public final class AttackDetector {
+    private AttackDetector(){}
 
-    public boolean isSquareAttacked(Board board, Position square, Color attacker) {
+    public static boolean isSquareAttacked(Board board, Position square, Color attacker) {
         return pawnAttack(board, square, attacker)
                 || knightAttack(board, square, attacker)
                 || slidingAttack(board, square, attacker)
                 || kingAttack(board, square, attacker);
     }
 
-    private boolean pawnAttack(Board board, Position square, Color attacker) {
+    private static boolean pawnAttack(Board board, Position square, Color attacker) {
         int direction = attacker.isWhite() ? -1 : 1;
         for (int fileDirection : new int[] { -1, 1 }) {
             int rank = square.rank() + direction, file = square.file() + fileDirection;
@@ -30,7 +32,7 @@ public final class AttackDetector {
         return false;
     }
 
-    private boolean knightAttack(Board board, Position square, Color attacker) {
+    private static boolean knightAttack(Board board, Position square, Color attacker) {
         int[] dr = { -2, -2, -1, -1, 1, 1, 2, 2 }, df = { -1, 1, -2, 2, -2, 2, -1, 1 };
         for (int i = 0; i < dr.length; i++) {
             int rank = square.rank() + dr[i], file = square.file() + df[i];
@@ -43,7 +45,7 @@ public final class AttackDetector {
         return false;
     }
 
-    private boolean slidingAttack(Board board, Position square, Color attacker) {
+    private static boolean slidingAttack(Board board, Position square, Color attacker) {
         int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
         for (int[] direction : directions) {
             int rank = square.rank() + direction[0], file = square.file() + direction[1];
@@ -67,7 +69,7 @@ public final class AttackDetector {
         return false;
     }
 
-    private boolean kingAttack(Board board, Position square, Color attacker) {
+    private static boolean kingAttack(Board board, Position square, Color attacker) {
         int[] rankDirections = { -1, -1, -1, 0, 0, 1, 1, 1 }, fileDirections = { -1, 0, 1, -1, 1, -1, 0, 1 };
         for (int i = 0; i < rankDirections.length; i++) {
             int rank = square.rank() + rankDirections[i], file = square.file() + fileDirections[i];

@@ -4,12 +4,12 @@ import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.infra.validation.MoveValidation;
+import com.bill.chess.domain.validation.MoveValidation;
 
 public final class MoveFactory {
 
     public static Move quiet(Position from, Position to, Piece pieceMoved) {
-        MoveValidation.validateMove(from, to);
+        MoveValidation.validatePositions(from, to);
         return new Move(from, to, null, null, pieceMoved, false, false);
     }
 

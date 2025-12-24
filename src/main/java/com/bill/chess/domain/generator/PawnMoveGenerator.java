@@ -12,7 +12,7 @@ import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 import com.bill.chess.domain.factory.PositionFactory;
 import com.bill.chess.domain.factory.MoveFactory;
-import com.bill.chess.domain.rule.ValidPositionRule;
+import com.bill.chess.domain.validation.ValidPositionRule;
 
 public final class PawnMoveGenerator implements MoveGenerator {
 

@@ -1,7 +1,7 @@
-package com.bill.chess.infra.validation;
+package com.bill.chess.domain.validation;
 
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.infra.exception.InvalidPositionException;
+import com.bill.chess.domain.exception.InvalidPositionException;
 
 public final class PositionValidation {
 
@@ -22,7 +22,7 @@ public final class PositionValidation {
     public static void validatePosition(int rank, int file) {
         if (file < 0 || file > 7 || rank < 1 || rank > 8) {
             char fileChar = (char) ('a' + file);
-            throw new InvalidPositionException("Invalid position: " + String.valueOf(fileChar) + rank);
+            throw new InvalidPositionException("Invalid position: " + fileChar + rank);
         }
     }
 }

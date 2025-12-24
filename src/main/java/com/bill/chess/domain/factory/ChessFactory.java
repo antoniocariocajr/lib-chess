@@ -10,6 +10,9 @@ import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Position;
 
+import static com.bill.chess.domain.rule.InCheckCalculator.isInCheck;
+import static com.bill.chess.domain.rule.StatusMatchCalculator.calculatorStatus;
+
 public class ChessFactory {
 
     public static ChessMatch create() {
@@ -33,8 +36,9 @@ public class ChessFactory {
         Position enPassantSquare = PositionFactory.fromFen(fenParts[3]);
         Integer halfMoveClock = Integer.parseInt(fenParts[4]);
         Integer fullMoveNumber = Integer.parseInt(fenParts[5]);
-        boolean inCheck = false;
-        return new ChessMatch(board, MatchStatus.IN_PROGRESS, color, castleRights, enPassantSquare, halfMoveClock,
+        boolean inCheck = isInCheck(board,color);
+        MatchStatus status = calculatorStatus(board,color,castleRights,enPassantSquare,halfMoveClock);
+        return new ChessMatch(board, status, color, castleRights, enPassantSquare, halfMoveClock,
                 fullMoveNumber, inCheck);
     }
 

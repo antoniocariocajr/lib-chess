@@ -1,31 +1,24 @@
-package com.bill.chess.infra.validation;
+package com.bill.chess.domain.validation;
 
-import com.bill.chess.domain.model.Move;
+import com.bill.chess.domain.exception.InvalidPositionException;
+import com.bill.chess.domain.exception.InvalidUciException;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.infra.exception.InvalidMoveException;
+import com.bill.chess.domain.exception.InvalidMoveException;
 
 public final class MoveValidation {
-    public static void validateMove(Move move) {
-        if (move == null)
-            throw new InvalidMoveException("Move cannot be null");
-        if (move.from().equals(move.to()))
-            throw new InvalidMoveException("Move cannot be from and to the same position");
-        if (move.moved().isEmpty())
-            throw new InvalidMoveException("Move must have a piece moved");
-        if (move.captured().isPresent() && move.captured().get().color() == move.moved().get().color())
-            throw new InvalidMoveException("Move cannot capture a piece of the same color");
-    }
 
-    public static void validateMove(Position from, Position to) {
+    public static void validatePositions(Position from, Position to) {
+
+        if (from == null || to == null)
+            throw new InvalidPositionException("Move cannot be null");
+
         if (from.equals(to))
             throw new InvalidMoveException("Move cannot be from and to the same position");
-        if (from == null || to == null)
-            throw new InvalidMoveException("Move cannot be null");
     }
 
     public static void validateEnPassant(Position from, Position to, Piece pieceMoved) {
-        validateMove(from, to);
+        validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
         if (!pieceMoved.isPawn())
             throw new InvalidMoveException("En passant can only be made by a pawn");
@@ -36,7 +29,7 @@ public final class MoveValidation {
     }
 
     public static void validateCastling(Position from, Position to, Piece pieceMoved) {
-        validateMove(from, to);
+        validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
         if (!pieceMoved.isKing())
             throw new InvalidMoveException("Castling can only be made by a king");
@@ -53,7 +46,7 @@ public final class MoveValidation {
     }
 
     public static void validatePromotion(Position from, Position to, Piece promoted, Piece pieceMoved) {
-        validateMove(from, to);
+        validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
         PieceValidation.validatePiece(promoted);
         if (!pieceMoved.isPawn())
@@ -69,7 +62,7 @@ public final class MoveValidation {
     }
 
     public static void validateCapture(Position from, Position to, Piece capturedPiece, Piece pieceMoved) {
-        validateMove(from, to);
+        validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
         PieceValidation.validatePiece(capturedPiece);
         if (capturedPiece.color() == pieceMoved.color())
@@ -78,6 +71,6 @@ public final class MoveValidation {
 
     public static void validateUci(String uci) {
         if (uci == null || uci.length() < 4 || uci.length() > 5)
-            throw new InvalidMoveException("Invalid uci: " + uci);
+            throw new InvalidUciException("Invalid uci: " + uci);
     }
 }

@@ -34,7 +34,4 @@ public record Piece(@NotNull PieceType type, @NotNull Color color) {
         return type == PieceType.ROOK;
     }
 
-    public boolean isNull() {
-        return this == null;
-    }
 }

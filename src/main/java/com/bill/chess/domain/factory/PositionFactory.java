@@ -1,7 +1,7 @@
 package com.bill.chess.domain.factory;
 
-import static com.bill.chess.infra.validation.PositionValidation.validateNotation;
-import static com.bill.chess.infra.validation.PositionValidation.validatePosition;
+import static com.bill.chess.domain.validation.PositionValidation.validateNotation;
+import static com.bill.chess.domain.validation.PositionValidation.validatePosition;
 
 import com.bill.chess.domain.model.Position;
 

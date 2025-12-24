@@ -1,4 +1,4 @@
-package com.bill.chess.domain.enricher;
+package com.bill.chess.domain.move;
 
 import com.bill.chess.domain.exception.ChessEngineException;
 import com.bill.chess.domain.exception.InvalidMoveException;

@@ -10,7 +10,7 @@ import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.domain.rule.ValidPositionRule;
+import com.bill.chess.domain.validation.ValidPositionRule;
 
 public final class SlidingMoveGenerator implements MoveGenerator {
 

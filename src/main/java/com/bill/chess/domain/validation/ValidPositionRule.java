@@ -1,6 +1,4 @@
-package com.bill.chess.domain.rule;
-
-import com.bill.chess.domain.model.Position;
+package com.bill.chess.domain.validation;
 
 public final class ValidPositionRule {
 

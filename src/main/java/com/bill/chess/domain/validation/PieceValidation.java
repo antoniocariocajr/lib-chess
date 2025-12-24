@@ -1,12 +1,12 @@
-package com.bill.chess.infra.validation;
+package com.bill.chess.domain.validation;
 
 import com.bill.chess.domain.model.Piece;
-import com.bill.chess.infra.exception.InvalidPieceException;
+import com.bill.chess.domain.exception.InvalidPieceException;
 
 public final class PieceValidation {
 
     public static void validatePiece(Piece piece) {
-        if (piece.isNull()) {
+        if (piece==null) {
             throw new InvalidPieceException("Piece cannot be null");
         }
     }

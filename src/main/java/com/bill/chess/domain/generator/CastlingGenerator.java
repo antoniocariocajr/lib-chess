@@ -12,11 +12,11 @@ import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
-import com.bill.chess.domain.rule.InCheckCalculator;
+
+import static com.bill.chess.domain.rule.AttackDetector.isSquareAttacked;
+import static com.bill.chess.domain.rule.InCheckCalculator.isInCheck;
 
 public final class CastlingGenerator {
-
-    private static final InCheckCalculator checkCalc = new InCheckCalculator();
 
     public List<Move> generate(Board board, Color color, Set<CastleRight> rights) {
         List<Move> moves = new ArrayList<>(2);
@@ -29,15 +29,15 @@ public final class CastlingGenerator {
         Piece king = board.pieceAt(kingPos)
                 .filter(Piece::isKing)
                 .orElse(null);
-        if (king == null || checkCalc.isInCheck(board, color))
+        if (king == null || isInCheck(board, color))
             return moves;
 
         // Kingside
         if (ks
                 && board.pieceAt(PositionFactory.of(rank, 5)).isEmpty()
                 && board.pieceAt(PositionFactory.of(rank, 6)).isEmpty()
-                && !checkCalc.isSquareAttacked(board, PositionFactory.of(rank, 5), color.opposite())
-                && !checkCalc.isSquareAttacked(board, PositionFactory.of(rank, 6), color.opposite())) {
+                && !isSquareAttacked(board, PositionFactory.of(rank, 5), color.opposite())
+                && !isSquareAttacked(board, PositionFactory.of(rank, 6), color.opposite())) {
             moves.add(MoveFactory.castle(kingPos, PositionFactory.of(rank, 6), king));
         }
         // Queenside
@@ -45,8 +45,8 @@ public final class CastlingGenerator {
                 && board.pieceAt(PositionFactory.of(rank, 3)).isEmpty()
                 && board.pieceAt(PositionFactory.of(rank, 2)).isEmpty()
                 && board.pieceAt(PositionFactory.of(rank, 1)).isEmpty()
-                && !checkCalc.isSquareAttacked(board, PositionFactory.of(rank, 3), color.opposite())
-                && !checkCalc.isSquareAttacked(board, PositionFactory.of(rank, 2), color.opposite())) {
+                && !isSquareAttacked(board, PositionFactory.of(rank, 3), color.opposite())
+                && !isSquareAttacked(board, PositionFactory.of(rank, 2), color.opposite())) {
             moves.add(MoveFactory.castle(kingPos, PositionFactory.of(rank, 2), king));
         }
         return moves;

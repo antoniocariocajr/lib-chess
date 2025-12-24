@@ -56,23 +56,23 @@ A execução de movimentos é funcional: você passa o estado atual e o moviment
 ```java
 import com.bill.chess.domain.factory.MoveFactory;
 import com.bill.chess.domain.factory.PositionFactory;
-import com.bill.chess.domain.executor.MoveExecutor;
+import com.bill.chess.domain.move.MoveApplicator;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 
 // 1. Identificar as posições
 Position from = PositionFactory.fromNotation("e2");
-Position to = PositionFactory.fromNotation("e4");
+        Position to = PositionFactory.fromNotation("e4");
 
-// 2. Obter a peça do tabuleiro atual
-Piece piece = match.board().pieceAt(from).orElseThrow();
+        // 2. Obter a peça do tabuleiro atual
+        Piece piece = match.board().pieceAt(from).orElseThrow();
 
-// 3. Criar o objeto de movimento (ex: via UCI ou Factory)
-Move move = MoveFactory.fromUci("e2e4", piece);
+        // 3. Criar o objeto de movimento (ex: via UCI ou Factory)
+        Move move = MoveFactory.fromUci("e2e4", piece);
 
-// 4. Executar e obter o novo estado da partida
-ChessMatch nextMatch = MoveExecutor.executeMove(match, move);
+        // 4. Executar e obter o novo estado da partida
+        ChessMatch nextMatch = MoveApplicator.executeMove(match, move);
 ```
 
 ### 3. Usar FEN (Forsyth-Edwards Notation)

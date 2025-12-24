@@ -1,4 +1,4 @@
-package com.bill.chess.infra.exception;
+package com.bill.chess.domain.exception;
 
 public class InvalidMoveException extends RuntimeException {
     public InvalidMoveException(String message) {

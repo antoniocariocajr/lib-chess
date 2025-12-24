@@ -1,7 +1,7 @@
 package com.bill.chess.domain.factory;
 
 import com.bill.chess.domain.enums.Color;
-import com.bill.chess.infra.exception.InvalidColorException;
+import com.bill.chess.domain.exception.InvalidColorException;
 
 public final class ColorFactory {
 

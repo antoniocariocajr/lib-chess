@@ -18,9 +18,10 @@ import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 
+import static com.bill.chess.domain.rule.InCheckCalculator.isInCheck;
+
 public final class PieceMoveProvider {
 
-    private static final InCheckCalculator CHECK = new InCheckCalculator();
     private static final Map<PieceType, MoveGenerator> GEN = Map.of(
             PieceType.PAWN, new PawnMoveGenerator(),
             PieceType.KNIGHT, StepMoveGenerator.KNIGHT,
@@ -52,7 +53,7 @@ public final class PieceMoveProvider {
             for (Move m : pseudo) {
                 Board copy = BoardFactory.copy(match.board());
                 copy.doMove(m);
-                if (!CHECK.isInCheck(copy, match.currentColor()))
+                if (!isInCheck(copy, match.currentColor()))
                     legal.add(m);
             }
             return legal;
