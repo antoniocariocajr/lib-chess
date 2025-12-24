@@ -55,7 +55,7 @@ public final class PawnMoveGenerator implements MoveGenerator {
                 addPawnMoves(moves, from, to, piece, victim.get());
 
             if (to.equals(enPassant))
-                moves.add(MoveFactory.capture(from, to,
+                moves.add(MoveFactory.enPassant(from, to,
                         new Piece(PieceType.PAWN, color.opposite()), piece));
         }
         return moves;

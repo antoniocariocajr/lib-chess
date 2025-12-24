@@ -23,14 +23,14 @@ public final class MoveValidation {
         PieceValidation.validatePiece(capturedPiece);
         if (!pieceMoved.isPawn())
             throw new InvalidMoveException("En passant can only be made by a pawn");
-        if (from.file() != to.file())
-            throw new InvalidMoveException("En passant can only be made by a pawn on the same file");
-        if (from.rank() != to.rank() + 2)
-            throw new InvalidMoveException("En passant can only be made by a pawn on the same rank");
+        if (Math.abs(from.file() - to.file()) != 1)
+            throw new InvalidMoveException("En passant capture must change file by 1");
+        if (Math.abs(from.rank() - to.rank()) != 1)
+            throw new InvalidMoveException("En passant capture must change rank by 1");
         if (!capturedPiece.isPawn())
-            throw new InvalidMoveException("En passant can only be made by a pawn");
+            throw new InvalidMoveException("En passant can only capture a pawn");
         if (capturedPiece.color() == pieceMoved.color())
-            throw new InvalidMoveException("En passant can only be made by a pawn of the opposite color");
+            throw new InvalidMoveException("En passant can only be made on the opposite color");
     }
 
     public static void validateCastling(Position from, Position to, Piece pieceMoved) {
@@ -38,16 +38,14 @@ public final class MoveValidation {
         PieceValidation.validatePiece(pieceMoved);
         if (!pieceMoved.isKing())
             throw new InvalidMoveException("Castling can only be made by a king");
-        if (from.file() != to.file() + 2)
-            throw new InvalidMoveException("Castling can only be made by a king on the same file");
+        if (Math.abs(from.file() - to.file()) != 2)
+            throw new InvalidMoveException("Castling must move the king 2 squares horizontally");
         if (from.rank() != to.rank())
-            throw new InvalidMoveException("Castling can only be made by a king on the same rank");
-        if (from.rank() != 1 && from.rank() != 8)
-            throw new InvalidMoveException("Castling can only be made by a king on the first or eighth rank");
-        if (from.rank() == 1 && pieceMoved.isWhite())
-            throw new InvalidMoveException("Castling can only be made by a white king on the first rank");
-        if (from.rank() == 8 && !pieceMoved.isWhite())
-            throw new InvalidMoveException("Castling can only be made by a black king on the eighth rank");
+            throw new InvalidMoveException("Castling must be on the same rank");
+
+        int expectedRank = pieceMoved.isWhite() ? 1 : 8;
+        if (from.rank() != expectedRank)
+            throw new InvalidMoveException("Castling must be on the correct rank for the piece's color");
     }
 
     public static void validatePromotion(Position from, Position to, Piece promoted, Piece pieceMoved) {
@@ -56,14 +54,14 @@ public final class MoveValidation {
         PieceValidation.validatePiece(promoted);
         if (!pieceMoved.isPawn())
             throw new InvalidMoveException("Promotion can only be made by a pawn");
-        if (from.rank() != to.rank() + 1)
-            throw new InvalidMoveException("Promotion can only be made by a pawn on the same rank");
+        if (Math.abs(from.rank() - to.rank()) != 1)
+            throw new InvalidMoveException("Promotion move must change rank by 1");
         if (!promoted.isQueen() && !promoted.isRook() && !promoted.isBishop() && !promoted.isKnight())
             throw new InvalidMoveException("Promotion can only be made to a queen, rook, bishop or knight");
-        if (to.rank() == 8 && pieceMoved.isWhite())
-            throw new InvalidMoveException("Promotion Invalid in this position");
-        if (to.rank() == 1 && !pieceMoved.isWhite())
-            throw new InvalidMoveException("Promotion Invalid in this position");
+
+        int promotionRank = pieceMoved.isWhite() ? 8 : 1;
+        if (to.rank() != promotionRank)
+            throw new InvalidMoveException("Pawn can only promote on the last rank");
     }
 
     public static void validateCapture(Position from, Position to, Piece capturedPiece, Piece pieceMoved) {

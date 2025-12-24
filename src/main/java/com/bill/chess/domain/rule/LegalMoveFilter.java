@@ -64,6 +64,8 @@ public final class LegalMoveFilter {
     public static List<Move> forColor(Board board, Color color,
             Set<CastleRight> rights,
             Position enPassant) {
+        if (rights == null)
+            rights = java.util.Collections.emptySet();
         List<Move> pseudo = new ArrayList<>(100);
 
         // gera todos os pseudo-moves
