@@ -34,11 +34,17 @@ public record Move(
             return false;
         Move move = (Move) o;
         return Objects.equals(PositionFactory.toNotation(to), PositionFactory.toNotation(move.to))
-                && Objects.equals(PositionFactory.toNotation(from), PositionFactory.toNotation(move.from));
+                && Objects.equals(PositionFactory.toNotation(from), PositionFactory.toNotation(move.from))
+                && Objects.equals(capturedPiece(), move.capturedPiece())
+                && Objects.equals(pawnPromotion(), move.pawnPromotion())
+                && Objects.equals(pieceMoved(), move.pieceMoved())
+                && isCastling() == move.isCastling()
+                && isEnPassant() == move.isEnPassant();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(PositionFactory.toNotation(from), PositionFactory.toNotation(to));
+        return Objects.hash(PositionFactory.toNotation(from), PositionFactory.toNotation(to), capturedPiece(),
+                pawnPromotion(), pieceMoved(), isCastling(), isEnPassant());
     }
 }
