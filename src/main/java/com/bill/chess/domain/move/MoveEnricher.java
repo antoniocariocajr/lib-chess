@@ -13,6 +13,7 @@ import com.bill.chess.domain.model.Position;
 import java.util.Optional;
 
 import static com.bill.chess.domain.validation.MoveValidation.*;
+import static com.bill.chess.domain.validation.UciValidation.validateUci;
 
 public final class MoveEnricher {
 

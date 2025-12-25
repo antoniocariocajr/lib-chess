@@ -21,30 +21,20 @@ public class MatchManager {
         this.currentMatch = initialMatch;
     }
 
-    /**
-     * Aplica um novo movimento à partida.
-     */
     public void applyMove(Move move) {
         history.push(currentMatch);
         redoStack.clear();
         currentMatch = MoveApplicator.apply(currentMatch, move);
     }
 
-    /**
-     * Desfaz o último movimento realizado.
-     * 
-     * @return true se foi possível desfazer, false caso contrário.
-     */
     public boolean undo() {
         if (history.isEmpty()) {
             return false;
         }
 
-        // Para poder dar Redo, precisamos saber qual movimento foi desfeito.
-        // O movimento desfeito é o último no histórico do board da partida ATUAL.
         var moves = currentMatch.board().history();
         if (!moves.isEmpty()) {
-            Move lastMove = moves.get(moves.size() - 1);
+            Move lastMove = moves.getLast();
             redoStack.push(lastMove);
         }
 
@@ -52,11 +42,6 @@ public class MatchManager {
         return true;
     }
 
-    /**
-     * Refaz o último movimento desfeito.
-     * 
-     * @return true se foi possível refazer, false caso contrário.
-     */
     public boolean redo() {
         if (redoStack.isEmpty()) {
             return false;

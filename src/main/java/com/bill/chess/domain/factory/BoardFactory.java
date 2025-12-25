@@ -2,14 +2,11 @@ package com.bill.chess.domain.factory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
-import com.bill.chess.domain.model.Position;
 import com.bill.chess.domain.validation.BoardValidation;
 
 public class BoardFactory {
@@ -38,52 +35,6 @@ public class BoardFactory {
         }
 
         return of(newSquares, board.history());
-    }
-
-    public static Board fromFen(String fenBoard, List<Move> history) {
-
-        BoardValidation.validateFenBoard(fenBoard);
-
-        Piece[][] squares = new Piece[9][8];
-        String[] rankStr = fenBoard.split("/");
-        for (int r = 0; r <= 7; r++) {
-            String row = rankStr[7 - r];
-            int file = 0;
-            for (char c : row.toCharArray()) {
-                if (Character.isDigit(c)) {
-                    file += c - '0';
-                } else {
-                    squares[r + 1][file] = PieceFactory.toPiece(c);
-                    file++;
-                }
-            }
-        }
-
-        return of(squares, history);
-    }
-
-    public static String toFen(Board board) {
-        StringBuilder boardFen = new StringBuilder();
-        for (int rank = 8; rank >= 1; rank--) {
-            int empty = 0;
-            for (int file = 0; file < 8; file++) {
-                Optional<Piece> op = board.pieceAt(new Position(rank, file));
-                if (op.isEmpty()) {
-                    empty++;
-                } else {
-                    if (empty > 0) {
-                        boardFen.append(empty);
-                        empty = 0;
-                    }
-                    boardFen.append(PieceFactory.toUnicode(op.get()));
-                }
-            }
-            if (empty > 0)
-                boardFen.append(empty);
-            if (rank > 1)
-                boardFen.append('/');
-        }
-        return boardFen.toString();
     }
 
     private static void initializeBoard(Piece[][] squares) {

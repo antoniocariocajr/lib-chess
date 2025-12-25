@@ -1,15 +1,16 @@
-package com.bill.chess.domain.factory;
+package com.bill.chess.domain.converter;
 
+import com.bill.chess.domain.factory.PositionFactory;
 import com.bill.chess.domain.model.Board;
+import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.rule.LegalMoveFilter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Converte movimentos para Standard Algebraic Notation (SAN).
+ * Convert moves to Standard Algebraic Notation (SAN).
  */
 public final class SanConverter {
 
@@ -26,7 +27,7 @@ public final class SanConverter {
 
         if (moved.isPawn()) {
             if (move.captured().isPresent()) {
-                san.append(fileToChar(move.from().file()));
+                san.append(move.from().fileToChar());
                 san.append("x");
             }
             san.append(PositionFactory.toNotation(move.to()));
@@ -42,18 +43,18 @@ public final class SanConverter {
                     .filter(m -> !m.equals(move)
                             && m.pieceMoved().type() == moved.type()
                             && m.to().equals(move.to()))
-                    .collect(Collectors.toList());
+                    .toList();
 
             if (!otherMoves.isEmpty()) {
                 boolean sameFile = otherMoves.stream().anyMatch(m -> m.from().file() == move.from().file());
                 boolean sameRank = otherMoves.stream().anyMatch(m -> m.from().rank() == move.from().rank());
 
                 if (!sameFile) {
-                    san.append(fileToChar(move.from().file()));
+                    san.append(move.from().fileToChar());
                 } else if (!sameRank) {
                     san.append(move.from().rank());
                 } else {
-                    san.append(fileToChar(move.from().file()));
+                    san.append(move.from().fileToChar());
                     san.append(move.from().rank());
                 }
             }
@@ -67,7 +68,13 @@ public final class SanConverter {
         return san.toString();
     }
 
-    private static char fileToChar(int file) {
-        return (char) ('a' + file);
+    public static Move fromSan(String san, ChessMatch match) {
+        String cleanSan = san.replaceAll("[+#?!]", "");
+
+        return LegalMoveFilter.forColor(match)
+                .stream()
+                .filter(move -> toSan(match.board(), move).replaceAll("[+#]", "").equals(cleanSan))
+                .findFirst()
+                .orElse(null);
     }
 }

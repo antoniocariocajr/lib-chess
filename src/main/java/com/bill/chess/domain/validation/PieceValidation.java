@@ -1,13 +1,22 @@
 package com.bill.chess.domain.validation;
 
 import com.bill.chess.domain.model.Piece;
+
+import java.util.Optional;
+
 import com.bill.chess.domain.exception.InvalidPieceException;
 
 public final class PieceValidation {
 
     public static void validatePiece(Piece piece) {
-        if (piece==null) {
+        if (piece == null) {
             throw new InvalidPieceException("Piece cannot be null");
+        }
+    }
+
+    public static void validatePiece(Optional<Piece> piece) {
+        if (piece.isEmpty()) {
+            throw new InvalidPieceException("Piece not found at position initial");
         }
     }
 

@@ -1,6 +1,6 @@
 package com.bill.chess.service;
 
-import com.bill.chess.domain.factory.ChessFactory;
+import com.bill.chess.domain.converter.FenConverter;
 import com.bill.chess.domain.factory.PositionFactory;
 import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Move;
@@ -13,10 +13,11 @@ import java.util.List;
 
 import static com.bill.chess.domain.rule.LegalMoveFilter.forColor;
 import static com.bill.chess.domain.rule.PieceMoveProvider.forPiece;
-import static com.bill.chess.domain.validation.ChessValidation.validateFen;
+import static com.bill.chess.domain.validation.FenValidation.validateFen;
 
 public final class MatchService {
-    private MatchService(){}
+    private MatchService() {
+    }
 
     public static ChessMatch executeMove(ChessMatch match, Move move) {
         Move enriched = MoveEnricher.fromMove(match.board(), move);
@@ -24,16 +25,16 @@ public final class MatchService {
         return MoveApplicator.apply(match, enriched);
     }
 
-    public static List<Move> legalMove(String fen){
+    public static List<Move> legalMove(String fen) {
         validateFen(fen);
-        ChessMatch chessMatch = ChessFactory.fromFen(fen);
+        ChessMatch chessMatch = FenConverter.fromFen(fen);
         return forColor(chessMatch);
     }
 
-    public static List<Move> movesByPosition(String fen, String notation){
+    public static List<Move> movesByPosition(String fen, String notation) {
         validateFen(fen);
-        ChessMatch chessMatch = ChessFactory.fromFen(fen);
+        ChessMatch chessMatch = FenConverter.fromFen(fen);
         Position from = PositionFactory.fromNotation(notation);
-        return  forPiece(chessMatch,from);
+        return forPiece(chessMatch, from);
     }
 }

@@ -1,6 +1,5 @@
 package com.bill.chess.domain.rule.ai;
 
-import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Piece;
@@ -8,17 +7,12 @@ import com.bill.chess.domain.model.Position;
 
 import java.util.Map;
 
-/**
- * Responsável por avaliar uma posição no tabuleiro de xadrez.
- * Retorna um valor inteiro: positivo para vantagem das brancas, negativo para
- * vantagem das pretas.
- */
+
 public final class EvaluationFunction {
 
     private EvaluationFunction() {
     }
 
-    // Valores básicos das peças
     private static final Map<PieceType, Integer> MATERIAL_VALUES = Map.of(
             PieceType.PAWN, 100,
             PieceType.KNIGHT, 320,
@@ -27,10 +21,7 @@ public final class EvaluationFunction {
             PieceType.QUEEN, 900,
             PieceType.KING, 20000);
 
-    // Tabelas Piece-Square (PST) - Valores simplificados para incentivar
-    // desenvolvimento e controle do centro
-    // As tabelas são do ponto de vista das brancas. Para as pretas, invertemos as
-    // linhas.
+
     private static final int[][] PAWN_PST = {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 50, 50, 50, 50, 50, 50, 50, 50 },
@@ -64,9 +55,6 @@ public final class EvaluationFunction {
             { -20, -10, -10, -10, -10, -10, -10, -20 }
     };
 
-    /**
-     * Avalia o tabuleiro e retorna a pontuação.
-     */
     public static int evaluate(Board board) {
         int score = 0;
 
@@ -79,7 +67,7 @@ public final class EvaluationFunction {
                     int value = MATERIAL_VALUES.get(piece.type());
                     value += getPositionalValue(piece, rank - 1, file);
 
-                    if (piece.color() == Color.WHITE) {
+                    if (piece.isWhite()) {
                         score += value;
                     } else {
                         score -= value;
@@ -96,14 +84,14 @@ public final class EvaluationFunction {
             case PAWN -> PAWN_PST;
             case KNIGHT -> KNIGHT_PST;
             case BISHOP -> BISHOP_PST;
-            default -> null; // Outras peças sem PST simplificada por enquanto
+            default -> null;
         };
 
         if (pst == null)
             return 0;
 
-        // Se for preto, invertemos a linha para olhar do ponto de vista deles
-        int accessRank = piece.color() == Color.WHITE ? 7 - rank : rank;
+        // If it's black, we reverse the line to look at it from their point of view.
+        int accessRank = piece.isWhite() ? 7 - rank : rank;
         return pst[accessRank][file];
     }
 }

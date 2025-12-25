@@ -1,7 +1,6 @@
 package com.bill.chess.domain.validation;
 
 import com.bill.chess.domain.exception.InvalidPositionException;
-import com.bill.chess.domain.exception.InvalidUciException;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 import com.bill.chess.domain.exception.InvalidMoveException;
@@ -18,7 +17,6 @@ public final class MoveValidation {
     }
 
     public static void validateEnPassant(Position from, Position to, Piece capturedPiece, Piece pieceMoved) {
-        validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
         PieceValidation.validatePiece(capturedPiece);
         if (!pieceMoved.isPawn())
@@ -34,7 +32,6 @@ public final class MoveValidation {
     }
 
     public static void validateCastling(Position from, Position to, Piece pieceMoved) {
-        validatePositions(from, to);
         PieceValidation.validatePiece(pieceMoved);
         if (!pieceMoved.isKing())
             throw new InvalidMoveException("Castling can only be made by a king");
@@ -48,14 +45,11 @@ public final class MoveValidation {
             throw new InvalidMoveException("Castling must be on the correct rank for the piece's color");
     }
 
-    public static void validatePromotion(Position from, Position to, Piece promoted, Piece pieceMoved) {
-        validatePositions(from, to);
+    public static void validatePromotion(Position to, Piece promoted, Piece pieceMoved) {
         PieceValidation.validatePiece(pieceMoved);
         PieceValidation.validatePiece(promoted);
         if (!pieceMoved.isPawn())
             throw new InvalidMoveException("Promotion can only be made by a pawn");
-        if (Math.abs(from.rank() - to.rank()) != 1)
-            throw new InvalidMoveException("Promotion move must change rank by 1");
         if (!promoted.isQueen() && !promoted.isRook() && !promoted.isBishop() && !promoted.isKnight())
             throw new InvalidMoveException("Promotion can only be made to a queen, rook, bishop or knight");
 
@@ -64,16 +58,11 @@ public final class MoveValidation {
             throw new InvalidMoveException("Pawn can only promote on the last rank");
     }
 
-    public static void validateCapture(Position from, Position to, Piece capturedPiece, Piece pieceMoved) {
-        validatePositions(from, to);
+    public static void validateCapture(Piece capturedPiece, Piece pieceMoved) {
         PieceValidation.validatePiece(pieceMoved);
         PieceValidation.validatePiece(capturedPiece);
         if (capturedPiece.color() == pieceMoved.color())
             throw new InvalidMoveException("Move cannot capture a piece of the same color");
     }
 
-    public static void validateUci(String uci) {
-        if (uci == null || uci.length() < 4 || uci.length() > 5)
-            throw new InvalidUciException("Invalid uci: " + uci);
-    }
 }

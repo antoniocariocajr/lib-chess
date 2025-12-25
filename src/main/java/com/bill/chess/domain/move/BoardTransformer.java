@@ -9,6 +9,7 @@ import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 
 public final class BoardTransformer {
+    private BoardTransformer(){}
 
     public static Board apply(Board old, Move move) {
         Piece[][] newSquares = old.copySquares();

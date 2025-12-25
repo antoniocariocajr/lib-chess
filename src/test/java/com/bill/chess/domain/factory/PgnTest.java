@@ -1,14 +1,17 @@
 package com.bill.chess.domain.factory;
 
+import com.bill.chess.domain.converter.FenConverter;
+import com.bill.chess.domain.converter.PgnConverter;
+import com.bill.chess.domain.converter.SanConverter;
 import com.bill.chess.domain.model.ChessMatch;
-import com.bill.chess.domain.move.MoveApplicator;
 import com.bill.chess.domain.model.Move;
+import com.bill.chess.domain.move.MoveApplicator;
 import com.bill.chess.domain.rule.LegalMoveFilter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PgnTest {
 
@@ -28,15 +31,15 @@ class PgnTest {
         // 3. Bb5 (Ruy Lopez)
         match = applySanMove(match, "Bb5");
 
-        String originalFen = ChessFactory.toFen(match);
+        String originalFen = FenConverter.toFen(match);
 
         // 2. Export to PGN
-        String pgn = PgnExporter.export(match);
+        String pgn = PgnConverter.toPgn(match);
         System.out.println("Generated PGN:\n" + pgn);
 
         // 3. Load from PGN
-        ChessMatch loadedMatch = PgnLoader.load(pgn);
-        String loadedFen = ChessFactory.toFen(loadedMatch);
+        ChessMatch loadedMatch = PgnConverter.fromPgn(pgn);
+        String loadedFen = FenConverter.toFen(loadedMatch);
 
         // 4. Verify FENs match
         assertEquals(originalFen, loadedFen);

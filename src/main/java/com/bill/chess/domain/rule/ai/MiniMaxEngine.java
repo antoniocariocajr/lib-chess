@@ -8,9 +8,7 @@ import com.bill.chess.domain.rule.LegalMoveFilter;
 
 import java.util.List;
 
-/**
- * Motor de IA que utiliza o algoritmo Minimax com poda Alpha-Beta.
- */
+
 public final class MiniMaxEngine {
 
     private final int searchDepth;
@@ -19,22 +17,17 @@ public final class MiniMaxEngine {
         this.searchDepth = depth;
     }
 
-    /**
-     * Encontra a melhor jogada para a cor atual.
-     */
     public Move findBestMove(Board board, Color color) {
-        List<Move> legalMoves = LegalMoveFilter.forColor(board, color, null, null); // Simplificado: assumindo sem
-                                                                                    // enPassant/Castle inicial para
-                                                                                    // teste
+        List<Move> legalMoves = LegalMoveFilter.forColor(board, color, null, null);
 
         Move bestMove = null;
-        int bestValue = (color == Color.WHITE) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        int bestValue = color.isWhite() ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
         for (Move move : legalMoves) {
             Board nextBoard = BoardTransformer.apply(board, move);
-            int value = minimax(nextBoard, searchDepth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color != Color.WHITE);
+            int value = minimax(nextBoard, searchDepth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, !color.isWhite());
 
-            if (color == Color.WHITE) {
+            if (color.isWhite()) {
                 if (value > bestValue) {
                     bestValue = value;
                     bestMove = move;

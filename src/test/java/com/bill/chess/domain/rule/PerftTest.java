@@ -1,5 +1,6 @@
 package com.bill.chess.domain.rule;
 
+import com.bill.chess.domain.converter.FenConverter;
 import com.bill.chess.domain.factory.ChessFactory;
 import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Move;
@@ -50,13 +51,13 @@ class PerftTest {
      */
     @Test
     void kiwipeteDepth1() {
-        ChessMatch match = ChessFactory.fromFen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        ChessMatch match = FenConverter.fromFen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
         assertEquals(48, perft(match, 1));
     }
 
     @Test
     void kiwipeteDepth2() {
-        ChessMatch match = ChessFactory.fromFen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        ChessMatch match = FenConverter.fromFen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
         assertEquals(2039, perft(match, 2));
     }
 

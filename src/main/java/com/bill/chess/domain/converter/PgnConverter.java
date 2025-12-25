@@ -1,23 +1,29 @@
-package com.bill.chess.domain.factory;
+package com.bill.chess.domain.converter;
 
+import com.bill.chess.domain.factory.BoardFactory;
+import com.bill.chess.domain.factory.ChessFactory;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.move.BoardTransformer;
+import com.bill.chess.domain.move.MoveApplicator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Exporta uma partida de xadrez para o formato PGN.
+ * Handles PGN (Portable Game Notation) conversions for chess matches.
  */
-public final class PgnExporter {
+public final class PgnConverter {
 
-    private PgnExporter() {
+    private PgnConverter() {
     }
 
-    public static String export(ChessMatch match) {
+    /**
+     * Exports a chess game to PGN format.
+     */
+    public static String toPgn(ChessMatch match) {
         StringBuilder pgn = new StringBuilder();
 
         // Headers (Default values)
@@ -48,4 +54,32 @@ public final class PgnExporter {
 
         return pgn.toString();
     }
+
+    /**
+     * Loads a chess game from a PGN String.
+     */
+    public static ChessMatch fromPgn(String pgn) {
+        ChessMatch match = ChessFactory.create();
+
+        // Simple regex to extract move tokens (ignoring headers, move numbers, and
+        // symbols like +, #, !, ?)
+        // This is a simplified parser for basic SAN.
+        String moveText = pgn.replaceAll("\\[.*?\\]", "").replaceAll("\\d+\\.", "").replaceAll("\\+", "")
+                .replaceAll("#", "").trim();
+        String[] tokens = moveText.split("\\s+");
+
+        for (String token : tokens) {
+            if (token.isEmpty())
+                continue;
+            if (token.equals("*") || token.equals("1-0") || token.equals("0-1") || token.equals("1/2-1/2")) {
+                break;
+            }
+
+            Move move = SanConverter.fromSan(token, match);
+            match = MoveApplicator.apply(match, move);
+        }
+
+        return match;
+    }
+
 }

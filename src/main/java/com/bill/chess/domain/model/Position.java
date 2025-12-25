@@ -7,6 +7,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 public record Position(@Positive int rank, @PositiveOrZero int file) {
 
+    public char fileToChar() {
+        return (char) ('a' + file);
+    }
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass())
