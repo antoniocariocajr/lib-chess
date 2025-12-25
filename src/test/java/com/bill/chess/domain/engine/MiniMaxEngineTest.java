@@ -1,4 +1,4 @@
-package com.bill.chess.domain.rule.ai;
+package com.bill.chess.domain.engine;
 
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.factory.BoardFactory;

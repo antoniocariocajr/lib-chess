@@ -1,4 +1,4 @@
-package com.bill.chess.domain.rule.ai;
+package com.bill.chess.domain.engine;
 
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Board;
@@ -6,7 +6,6 @@ import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
 
 import java.util.Map;
-
 
 public final class EvaluationFunction {
 
@@ -20,7 +19,6 @@ public final class EvaluationFunction {
             PieceType.ROOK, 500,
             PieceType.QUEEN, 900,
             PieceType.KING, 20000);
-
 
     private static final int[][] PAWN_PST = {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
