@@ -7,6 +7,7 @@ import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
+import com.bill.chess.domain.model.Position;
 import com.bill.chess.domain.validation.BoardValidation;
 
 public class BoardFactory {
@@ -15,7 +16,20 @@ public class BoardFactory {
 
         BoardValidation.validateSquares(squares);
 
-        return new Board(squares, new ArrayList<>(history));
+        Position whiteKing = findKing(squares, Color.WHITE);
+        Position blackKing = findKing(squares, Color.BLACK);
+
+        BoardValidation.positionKing(whiteKing);
+        BoardValidation.positionKing(blackKing);
+
+        return new Board(squares, new ArrayList<>(history), whiteKing, blackKing);
+    }
+
+    public static Board of(Piece[][] squares, List<Move> history, Position whiteKing, Position blackKing) {
+        BoardValidation.validateSquares(squares);
+        BoardValidation.positionKing(whiteKing);
+        BoardValidation.positionKing(blackKing);
+        return new Board(squares, new ArrayList<>(history), whiteKing, blackKing);
     }
 
     public static Board create() {
@@ -34,7 +48,7 @@ public class BoardFactory {
             System.arraycopy(board.squares()[r], 0, newSquares[r], 0, 8);
         }
 
-        return of(newSquares, board.history());
+        return of(newSquares, board.history(), board.whiteKingPos(), board.blackKingPos());
     }
 
     private static void initializeBoard(Piece[][] squares) {
@@ -65,6 +79,18 @@ public class BoardFactory {
         for (int file = 0; file < 8; file++) {
             squares[rank][file] = new Piece(PieceType.PAWN, color);
         }
+    }
+
+    private static Position findKing(Piece[][] squares, Color color) {
+        for (int rank = 1; rank < 9; rank++) {
+            for (int file = 0; file < 8; file++) {
+                Piece piece = squares[rank][file];
+                if (piece != null && piece.isKing() && piece.color() == color) {
+                    return new Position(rank, file);
+                }
+            }
+        }
+        return null;
     }
 
 }

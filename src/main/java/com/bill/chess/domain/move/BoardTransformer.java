@@ -4,20 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bill.chess.domain.factory.BoardFactory;
+import com.bill.chess.domain.model.Position;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 
 public final class BoardTransformer {
-    private BoardTransformer(){}
+    private BoardTransformer() {
+    }
 
     public static Board apply(Board old, Move move) {
         Piece[][] newSquares = old.copySquares();
+        Position whiteKing = old.whiteKingPos();
+        Position blackKing = old.blackKingPos();
+
+        Piece movedPiece = newSquares[move.from().rank()][move.from().file()];
 
         // 1. basic move
         newSquares[move.to().rank()][move.to().file()] = move.promotion()
-                .orElse(newSquares[move.from().rank()][move.from().file()]);
+                .orElse(movedPiece);
         newSquares[move.from().rank()][move.from().file()] = null;
+
+        // Update king position
+        if (movedPiece.isKing()) {
+            if (movedPiece.isWhite()) {
+                whiteKing = move.to();
+            } else {
+                blackKing = move.to();
+            }
+        }
 
         // 2. special cases
         if (move.isCastling()) {
@@ -36,6 +51,6 @@ public final class BoardTransformer {
 
         List<Move> newHistory = new ArrayList<>(old.history());
         newHistory.add(move);
-        return BoardFactory.of(newSquares, newHistory);
+        return BoardFactory.of(newSquares, newHistory, whiteKing, blackKing);
     }
 }
