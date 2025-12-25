@@ -18,11 +18,9 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           server-id: github
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
 
       - name: Compilar e publicar
         run: mvn deploy -B -DskipTests
         env:
-          MAVEN_USERNAME: ${{ github.actor }}   # or hard-code antoniocariocajr
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ github.actor }}
+          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
