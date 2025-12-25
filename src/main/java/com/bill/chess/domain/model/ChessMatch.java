@@ -1,5 +1,7 @@
 package com.bill.chess.domain.model;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,9 +17,16 @@ public record ChessMatch(
         Position enPassantSquare,
         Integer halfMoveClock,
         Integer fullMoveNumber,
-        boolean inCheck
+        boolean inCheck,
+        List<String> positionHistory
 
 ) {
+    public ChessMatch {
+        if (positionHistory == null) {
+            positionHistory = Collections.emptyList();
+        }
+    }
+
     public Optional<Position> enPassant() {
         return Optional.ofNullable(enPassantSquare);
     }

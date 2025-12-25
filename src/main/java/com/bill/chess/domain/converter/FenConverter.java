@@ -1,7 +1,6 @@
 package com.bill.chess.domain.converter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,6 +9,7 @@ import com.bill.chess.domain.enums.CastleRight;
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.MatchStatus;
 import com.bill.chess.domain.factory.BoardFactory;
+import com.bill.chess.domain.factory.CastleFactory;
 import com.bill.chess.domain.factory.ColorFactory;
 import com.bill.chess.domain.factory.PieceFactory;
 import com.bill.chess.domain.factory.PositionFactory;
@@ -18,6 +18,7 @@ import com.bill.chess.domain.model.ChessMatch;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.model.Piece;
 import com.bill.chess.domain.model.Position;
+import com.bill.chess.domain.rule.RepetitionDetector;
 import com.bill.chess.domain.validation.BoardValidation;
 import com.bill.chess.domain.validation.FenValidation;
 
@@ -39,16 +40,21 @@ public final class FenConverter {
 
         Board board = boardFromFen(fenParts[0], new ArrayList<>());
         Color color = ColorFactory.toColor(fenParts[1]);
-        Set<CastleRight> castleRights = castleFromFen(fenParts[2]);
+        Set<CastleRight> castleRights = CastleFactory.fromFen(fenParts[2]);
         Position enPassantSquare = PositionFactory.fromFen(fenParts[3]);
         Integer halfMoveClock = Integer.parseInt(fenParts[4]);
         Integer fullMoveNumber = Integer.parseInt(fenParts[5]);
 
         boolean inCheck = isInCheck(board, color);
-        MatchStatus status = calculatorStatus(board, color, castleRights, enPassantSquare, halfMoveClock);
+        String currentKey = RepetitionDetector.createPositionKey(board, color, castleRights,
+                enPassantSquare);
+        List<String> history = new ArrayList<>();
+        history.add(currentKey);
+
+        MatchStatus status = calculatorStatus(board, color, castleRights, enPassantSquare, halfMoveClock, history);
 
         return new ChessMatch(board, status, color, castleRights, enPassantSquare, halfMoveClock,
-                fullMoveNumber, inCheck);
+                fullMoveNumber, inCheck, history);
     }
 
     public static String toFen(ChessMatch match) {
@@ -57,7 +63,7 @@ public final class FenConverter {
         fen.append(" ");
         fen.append(ColorFactory.toSymbol(match.currentColor()));
         fen.append(" ");
-        fen.append(castleToFen(match.castleRights()));
+        fen.append(CastleFactory.toFen(match.castleRights()));
         fen.append(" ");
         if (match.enPassant().isPresent())
             fen.append(PositionFactory.toNotation(match.enPassant().get()));
@@ -116,34 +122,4 @@ public final class FenConverter {
         return boardFen.toString();
     }
 
-    private static Set<CastleRight> castleFromFen(String fenCastle) {
-        Set<CastleRight> castleRights = new HashSet<>();
-        if (fenCastle.equals("-"))
-            return castleRights;
-        for (char c : fenCastle.toCharArray()) {
-            switch (c) {
-                case 'K' -> castleRights.add(CastleRight.WHITE_KINGSIDE);
-                case 'Q' -> castleRights.add(CastleRight.WHITE_QUEENSIDE);
-                case 'k' -> castleRights.add(CastleRight.BLACK_KINGSIDE);
-                case 'q' -> castleRights.add(CastleRight.BLACK_QUEENSIDE);
-            }
-        }
-        return castleRights;
-    }
-
-    private static String castleToFen(Set<CastleRight> castleRights) {
-        if (castleRights.isEmpty())
-            return "-";
-        StringBuilder fen = new StringBuilder();
-        // Standard FEN order: KQkq
-        if (castleRights.contains(CastleRight.WHITE_KINGSIDE))
-            fen.append('K');
-        if (castleRights.contains(CastleRight.WHITE_QUEENSIDE))
-            fen.append('Q');
-        if (castleRights.contains(CastleRight.BLACK_KINGSIDE))
-            fen.append('k');
-        if (castleRights.contains(CastleRight.BLACK_QUEENSIDE))
-            fen.append('q');
-        return fen.toString();
-    }
 }

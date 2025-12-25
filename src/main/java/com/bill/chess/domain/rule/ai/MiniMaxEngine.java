@@ -4,10 +4,11 @@ import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.model.Board;
 import com.bill.chess.domain.model.Move;
 import com.bill.chess.domain.move.BoardTransformer;
+import com.bill.chess.domain.rule.InCheckCalculator;
 import com.bill.chess.domain.rule.LegalMoveFilter;
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 public final class MiniMaxEngine {
 
@@ -19,6 +20,7 @@ public final class MiniMaxEngine {
 
     public Move findBestMove(Board board, Color color) {
         List<Move> legalMoves = LegalMoveFilter.forColor(board, color, null, null);
+        MoveSorter.sortMoves(board, legalMoves);
 
         Move bestMove = null;
         int bestValue = color.isWhite() ? Integer.MIN_VALUE : Integer.MAX_VALUE;
@@ -45,20 +47,23 @@ public final class MiniMaxEngine {
 
     private int minimax(Board board, int depth, int alpha, int beta, boolean isMaximizing) {
         if (depth == 0) {
-            return EvaluationFunction.evaluate(board);
+            return quiescenceSearch(board, alpha, beta, isMaximizing);
         }
 
         Color color = isMaximizing ? Color.WHITE : Color.BLACK;
         List<Move> legalMoves = LegalMoveFilter.forColor(board, color, null, null);
 
         if (legalMoves.isEmpty()) {
-            if (com.bill.chess.domain.rule.InCheckCalculator.isInCheck(board, color)) {
+            if (InCheckCalculator.isInCheck(board, color)) {
                 // Checkmate: value is very bad for the side in check
-                return isMaximizing ? -30000 : 30000;
+                // We add depth to favor shorter mates
+                return isMaximizing ? -30000 - depth : 30000 + depth;
             }
             // Stalemate
             return 0;
         }
+
+        MoveSorter.sortMoves(board, legalMoves);
 
         if (isMaximizing) {
             int maxEval = Integer.MIN_VALUE;
@@ -82,6 +87,58 @@ public final class MiniMaxEngine {
                     break;
             }
             return minEval;
+        }
+    }
+
+    private int quiescenceSearch(Board board, int alpha, int beta, boolean isMaximizing) {
+        int standPat = EvaluationFunction.evaluate(board);
+
+        if (isMaximizing) {
+            if (standPat >= beta)
+                return beta;
+            if (alpha < standPat)
+                alpha = standPat;
+        } else {
+            if (standPat <= alpha)
+                return alpha;
+            if (beta > standPat)
+                beta = standPat;
+        }
+
+        Color color = isMaximizing ? Color.WHITE : Color.BLACK;
+        List<Move> legalMoves = LegalMoveFilter.forColor(board, color, null, null)
+                .stream()
+                .filter(m -> m.captured().isPresent())
+                .toList();
+
+        if (legalMoves.isEmpty()) {
+            return standPat;
+        }
+
+        // We need a modifiable list to sort
+        List<Move> captures = new ArrayList<>(legalMoves);
+        MoveSorter.sortMoves(board, captures);
+
+        if (isMaximizing) {
+            for (Move move : captures) {
+                Board nextBoard = BoardTransformer.apply(board, move);
+                int eval = quiescenceSearch(nextBoard, alpha, beta, false);
+                if (eval >= beta)
+                    return beta;
+                if (eval > alpha)
+                    alpha = eval;
+            }
+            return alpha;
+        } else {
+            for (Move move : captures) {
+                Board nextBoard = BoardTransformer.apply(board, move);
+                int eval = quiescenceSearch(nextBoard, alpha, beta, true);
+                if (eval <= alpha)
+                    return alpha;
+                if (eval < beta)
+                    beta = eval;
+            }
+            return beta;
         }
     }
 }

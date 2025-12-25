@@ -2,9 +2,9 @@ package com.bill.chess.domain.model;
 
 import com.bill.chess.domain.enums.PieceType;
 import com.bill.chess.domain.factory.BoardFactory;
-import com.bill.chess.domain.factory.MoveFactory;
 import com.bill.chess.domain.factory.PositionFactory;
 import com.bill.chess.domain.move.BoardTransformer;
+import com.bill.chess.domain.move.MoveEnricher;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,7 @@ class BoardTest {
         Board initialBoard = BoardFactory.create();
         Position from = PositionFactory.fromNotation("e2");
         Position to = PositionFactory.fromNotation("e4");
-        Piece pawn = initialBoard.pieceAt(from).orElseThrow();
-        Move move = MoveFactory.fromUci("e2e4", pawn);
+        Move move = MoveEnricher.fromUci(initialBoard, "e2e4");
 
         // Execute move
         Board nextBoard = BoardTransformer.apply(initialBoard, move);

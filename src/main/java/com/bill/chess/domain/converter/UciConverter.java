@@ -54,7 +54,7 @@ public final class UciConverter {
     public static String toUci(Move move) {
         StringBuilder sb = new StringBuilder();
         sb.append(PositionFactory.toNotation(move.from())).append(PositionFactory.toNotation(move.to()));
-        move.promotion().ifPresent(p -> sb.append(PieceFactory.toUnicode(p)));
+        move.promotion().ifPresent(p -> sb.append(Character.toLowerCase(PieceFactory.toUnicode(p))));
         return sb.toString();
     }
 }

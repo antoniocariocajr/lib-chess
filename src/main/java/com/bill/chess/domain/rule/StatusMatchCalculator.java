@@ -16,35 +16,44 @@ import static com.bill.chess.domain.rule.LegalMoveFilter.forColor;
 
 public final class StatusMatchCalculator {
 
-    private StatusMatchCalculator(){}
+    private StatusMatchCalculator() {
+    }
 
-    public static MatchStatus calculatorStatus(ChessMatch match){
+    public static MatchStatus calculatorStatus(ChessMatch match) {
         List<Move> moves = forColor(match);
-        if(moves.isEmpty()) {
+        if (moves.isEmpty()) {
             if (isInCheck(match.board(), match.currentColor())) {
-                return match.currentColor().isWhite() ?
-                        MatchStatus.BLACK_WINS :
-                        MatchStatus.WHITE_WINS;
+                return match.currentColor().isWhite() ? MatchStatus.BLACK_WINS : MatchStatus.WHITE_WINS;
             }
             return MatchStatus.STALEMATE;
         }
-        if (match.halfMoveClock()==100)return MatchStatus.DRAW;
+        if (match.halfMoveClock() == 100)
+            return MatchStatus.DRAW;
+        if (InsufficientMaterialCalculator.hasInsufficientMaterial(match.board()))
+            return MatchStatus.DRAW;
+        if (RepetitionDetector.isThreefoldRepetition(match.positionHistory()))
+            return MatchStatus.DRAW;
         return MatchStatus.IN_PROGRESS;
     }
+
     public static MatchStatus calculatorStatus(Board board, Color color,
-                                               Set<CastleRight> rights,
-                                               Position enPassant,
-                                               Integer halfMoveClock){
+            Set<CastleRight> rights,
+            Position enPassant,
+            Integer halfMoveClock,
+            List<String> history) {
         List<Move> moves = forColor(board, color, rights, enPassant);
-        if(moves.isEmpty()) {
+        if (moves.isEmpty()) {
             if (isInCheck(board, color)) {
-                return color.isWhite() ?
-                        MatchStatus.BLACK_WINS :
-                        MatchStatus.WHITE_WINS;
+                return color.isWhite() ? MatchStatus.BLACK_WINS : MatchStatus.WHITE_WINS;
             }
             return MatchStatus.STALEMATE;
         }
-        if (halfMoveClock==100)return MatchStatus.DRAW;
+        if (halfMoveClock == 100)
+            return MatchStatus.DRAW;
+        if (InsufficientMaterialCalculator.hasInsufficientMaterial(board))
+            return MatchStatus.DRAW;
+        if (RepetitionDetector.isThreefoldRepetition(history))
+            return MatchStatus.DRAW;
         return MatchStatus.IN_PROGRESS;
     }
 }

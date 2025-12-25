@@ -4,7 +4,10 @@ import com.bill.chess.domain.enums.CastleRight;
 import com.bill.chess.domain.enums.Color;
 import com.bill.chess.domain.enums.MatchStatus;
 import com.bill.chess.domain.model.*;
+import com.bill.chess.domain.rule.RepetitionDetector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.bill.chess.domain.rule.CastlingRights.updateCastle;
@@ -24,7 +27,16 @@ public final class MoveApplicator {
         Set<CastleRight> rights = updateCastle(chessMatch.castleRights(), move);
         Position enPassant = updateEnPassant(move);
         Integer halfMoveClock = updateHalfMove(chessMatch.halfMoveClock(), move);
-        MatchStatus status = calculatorStatus(board, colorNewTurn, rights, enPassant, halfMoveClock);
+
+        // Update Repetition History
+        List<String> newHistory = new ArrayList<>(chessMatch.positionHistory());
+        if (move.captured().isPresent() || move.pieceMoved().isPawn()) {
+            newHistory.clear(); // Repetition is impossible after capture or pawn move (irreversible)
+        }
+        String newKey = RepetitionDetector.createPositionKey(board, colorNewTurn, rights, enPassant);
+        newHistory.add(newKey);
+
+        MatchStatus status = calculatorStatus(board, colorNewTurn, rights, enPassant, halfMoveClock, newHistory);
         return new ChessMatch(
                 board,
                 status,
@@ -33,7 +45,8 @@ public final class MoveApplicator {
                 enPassant,
                 halfMoveClock,
                 updateFullMove(chessMatch.fullMoveNumber(), colorNewTurn),
-                isInCheck(board, colorNewTurn));
+                isInCheck(board, colorNewTurn),
+                newHistory);
     }
 
 }
